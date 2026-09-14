@@ -1,816 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ELCOIN - Mini App</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        body {
-            background-color: #070913;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .phone-container {
-            width: 100%;
-            max-width: 430px;
-            height: 100%;
-            background: #090c1b;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        /* Top Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: #090c1b;
-            z-index: 20;
-            flex-shrink: 0;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
-        }
-
-        .logo-icon::before {
-            content: '👑';
-            position: absolute;
-            top: -10px;
-            font-size: 12px;
-        }
-
-        .logo-icon span {
-            font-size: 20px;
-            font-weight: 900;
-            color: #0c0f1d;
-        }
-
-        .logo-text h1 {
-            font-size: 16px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: #ffffff;
-        }
-
-        .logo-text p {
-            font-size: 9px;
-            color: #a0aec0;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .profile-pill {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 4px 10px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .profile-pill .avatar {
-            width: 22px;
-            height: 22px;
-            background: #cbd5e0;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #1a202c;
-            font-size: 11px;
-        }
-
-        .profile-info .name {
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .profile-info .id {
-            font-size: 8px;
-            color: #a0aec0;
-        }
-
-        .icon-btn {
-            width: 32px;
-            height: 32px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .notification-dot::after {
-            content: '';
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 6px;
-            height: 6px;
-            background: #ff3b30;
-            border-radius: 50%;
-        }
-
-        /* Scrollable Content */
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 16px 90px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .content::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Hero Card */
-        .hero-card {
-            background: linear-gradient(180deg, rgba(16, 24, 48, 0.9) 0%, rgba(10, 14, 30, 0.98) 100%);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            padding: 14px;
-            position: relative;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            flex-shrink: 0;
-        }
-
-        .hero-top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .coin-counter .label {
-            font-size: 10px;
-            color: #f5c518;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            text-transform: uppercase;
-        }
-
-        .coin-counter .amount {
-            font-size: 28px;
-            font-weight: 900;
-            margin-top: 2px;
-        }
-
-        .coin-counter .rate {
-            font-size: 11px;
-            color: #34c759;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 2px;
-        }
-
-        .slogan-badge span {
-            font-size: 11px;
-            font-style: italic;
-            font-weight: 800;
-            color: #f5c518;
-            line-height: 1.1;
-            display: inline-block;
-            transform: rotate(3deg);
-            text-align: right;
-        }
-
-        /* Center Big Coin */
-        .main-coin-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 14px 0;
-            position: relative;
-            width: 100%;
-            height: 110px;
-        }
-
-        .main-coin {
-            width: 105px;
-            height: 105px;
-            background: radial-gradient(circle, #ffe600 0%, #f59e0b 70%, #d97706 100%);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            box-shadow: 0 0 25px rgba(245, 197, 24, 0.5), inset 0 0 10px rgba(255,255,255,0.7);
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .main-coin:active {
-            transform: scale(0.92);
-        }
-
-        .main-coin::before {
-            content: '👑';
-            position: absolute;
-            top: -10px;
-            font-size: 18px;
-        }
-
-        .main-coin-inner {
-            width: 85px;
-            height: 85px;
-            border: 2px dashed rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .main-coin-symbol {
-            font-size: 45px;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        /* Energy Bar */
-        .energy-section {
-            margin-top: 4px;
-        }
-
-        .energy-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: #cbd5e0;
-        }
-
-        .energy-bar-bg {
-            width: 100%;
-            height: 7px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .energy-bar-fill {
-            width: 48%;
-            height: 100%;
-            background: linear-gradient(90deg, #f59e0b, #ffd700);
-            border-radius: 4px;
-            transition: width 0.2s ease;
-        }
-
-        /* Action Cards Grid */
-        .action-cards-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .small-action-card {
-            background: rgba(18, 24, 43, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 10px 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card-header-top {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #e2e8f0;
-            margin-bottom: 6px;
-        }
-
-        .action-btn {
-            width: 100%;
-            background: linear-gradient(90deg, #f59e0b, #ffd700);
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            color: #0c0f1d;
-            font-weight: 800;
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .action-btn:active {
-            opacity: 0.8;
-        }
-
-        /* Menu Grid */
-        .menu-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .menu-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .menu-item {
-            background: rgba(18, 24, 43, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 14px;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-
-        .menu-item:active {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .menu-item-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .menu-icon-box {
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-        }
-
-        .menu-item-text .title {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .menu-item-text .desc {
-            font-size: 9px;
-            color: #a0aec0;
-            margin-top: 1px;
-        }
-
-        .arrow-icon {
-            color: #718096;
-            font-size: 12px;
-        }
-
-        .menu-item-full {
-            grid-column: span 2;
-        }
-
-        /* Weekly Top 10 Section */
-        .top10-section {
-            background: rgba(18, 24, 43, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 14px;
-            padding: 12px;
-        }
-
-        .top10-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .top10-title {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .all-ranking {
-            font-size: 11px;
-            color: #a0aec0;
-            cursor: pointer;
-        }
-
-        .top10-list {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 2px;
-        }
-
-        .top10-card {
-            min-width: 135px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 8px 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .rank-badge {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 10px;
-            font-weight: bold;
-        }
-        .rank-badge.r1 { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; }
-        .rank-badge.r2 { background: linear-gradient(135deg, #cbd5e0, #64748b); color: #000; }
-        .rank-badge.r3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; }
-
-        .top10-user-info .u-name {
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .top10-user-info .u-score {
-            font-size: 10px;
-            color: #f5c518;
-            font-weight: 600;
-        }
-
-        /* Bottom Nav Bar */
-        .bottom-nav {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #090c1b;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0 16px 0;
-            z-index: 50;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            cursor: pointer;
-            color: #718096;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        .nav-item.active {
-            color: #ffd700;
-        }
-
-        .nav-item svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        /* Floating Click Effect */
-        .floating-number {
-            position: absolute;
-            font-size: 18px;
-            font-weight: 900;
-            color: #ffd700;
-            animation: floatUp 0.6s ease-out forwards;
-            pointer-events: none;
-            z-index: 100;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ELCOIN</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;background:#010812;color:#fff;font-family:Arial,sans-serif}body{overflow-x:hidden}body:before{content:"";position:fixed;inset:0;z-index:-5;background:radial-gradient(circle at 50% 35%,#102d4b,#061727 42%,#010812 82%)}button{font-family:inherit;cursor:pointer}.app{width:100%;max-width:520px;margin:auto;padding:10px 12px 105px}.header{height:72px;display:flex;align-items:center;justify-content:space-between;gap:7px}.brand{display:flex;align-items:center;gap:9px;min-width:0}.logo{width:57px;height:57px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #ffc62d;background:radial-gradient(circle at 35% 25%,#fff5a0,#ffd535 28%,#d88f0d 65%,#744400);color:#8b5900;font-size:30px;font-weight:900;box-shadow:0 0 18px #f7c52f99,inset 0 0 12px #fff}.brand-text{font-size:27px;font-weight:900;letter-spacing:-1.5px}.brand-text span{color:#ffd334}.tagline{color:#b8c4d8;font-size:9px;letter-spacing:3px;margin-top:3px}.header-actions{display:flex;align-items:center;gap:5px}.profile-mini{height:46px;min-width:92px;padding:5px 8px;display:flex;align-items:center;gap:6px;border:1px solid #203b59;border-radius:15px;background:#071727}.profile-mini-icon{width:31px;height:31px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:22px}.profile-mini-icon img{width:100%;height:100%;object-fit:cover}.profile-mini-name{font-size:12px;font-weight:900;max-width:58px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.profile-mini-id{margin-top:2px;color:#8999ae;font-size:8px}.header-btn{width:41px;height:41px;border-radius:14px;border:1px solid #203b59;background:#071727;color:#fff;font-size:19px;position:relative}.badge{position:absolute;right:-2px;top:-5px;min-width:17px;height:17px;border-radius:10px;background:#ffce2f;color:#111;font-size:10px;font-weight:900;display:none;align-items:center;justify-content:center}.game-card{position:relative;min-height:535px;margin-top:10px;padding:14px;overflow:hidden;border:1px solid #24496d;border-radius:22px;background:radial-gradient(circle at 36% 75%,#51380055,transparent 28%),radial-gradient(circle at 75% 40%,#143c6255,transparent 38%),linear-gradient(145deg,#061523,#020c17 75%);box-shadow:0 20px 60px #000b,inset 0 0 35px #0c355055}.city{position:absolute;right:-5px;top:12px;width:61%;height:290px;opacity:.85}.building{position:absolute;bottom:48px;background:linear-gradient(180deg,#112c43,#061321);border:1px solid #244e6d;box-shadow:inset 0 0 15px #123f5e}.building:after{content:"";position:absolute;inset:8px;background:repeating-linear-gradient(90deg,transparent 0 7px,#ffd94a 7px 10px,transparent 10px 18px),repeating-linear-gradient(180deg,transparent 0 10px,#f7c82e 10px 13px,transparent 13px 22px);opacity:.25}.b1{left:0;width:17%;height:48%}.b2{left:17%;width:15%;height:70%}.b3{left:31%;width:18%;height:45%}.b4{left:49%;width:19%;height:100%}.b5{left:68%;width:14%;height:61%}.b6{left:82%;width:18%;height:42%}.bridge{position:absolute;bottom:43px;left:0;width:100%;height:4px;background:#b77721;box-shadow:0 0 10px #d99b2c}.bridge:after{content:"";position:absolute;left:10%;right:10%;top:4px;height:40px;border-top:2px solid #a66b20;border-radius:50%}.balance-area{position:relative;z-index:3;width:58%}.balance-label{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:900;color:#d8e2ef}.balance-coin{width:29px;height:29px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #ffd348;background:radial-gradient(circle,#fff06e,#e7a91a);color:#8b5b05;font-weight:900}.balance{margin-top:7px;font-size:48px;line-height:1;font-weight:900;letter-spacing:-2px}.balance-unit{color:#ffd331;font-size:20px;margin-left:3px}.income{margin-top:7px;color:#55e997;font-size:14px;font-weight:bold}.slogan{position:absolute;z-index:3;right:14px;top:16px;width:115px;color:#ffd12f;font-size:17px;line-height:1.05;font-weight:900;font-style:italic;text-align:center;transform:rotate(-5deg);text-shadow:0 0 7px #9c6800}.coin-zone{position:absolute;z-index:3;left:0;bottom:82px;width:62%;height:285px;display:flex;align-items:center;justify-content:center}.coin-glow{position:absolute;width:230px;height:55px;bottom:14px;border-radius:50%;background:#ffbd2377;filter:blur(18px)}.coin-platform{position:absolute;bottom:12px;width:230px;height:47px;border-radius:50%;background:radial-gradient(ellipse,#e3a52b,#4d310c 58%,#090b0c 70%);box-shadow:0 0 25px #eeb42c,inset 0 4px 8px #fff5}.coin{width:190px;height:190px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%,#fff9a7,#ffe04b 18%,#e8ac1c 46%,#9b6105);border:8px solid #ffc72e;box-shadow:0 0 0 5px #4b350a,0 0 25px #ffc52d,0 0 70px #ffb51e77,inset 12px 12px 25px #fff8,inset -17px -17px 27px #6c410088;touch-action:manipulation;user-select:none;transition:transform .1s}.coin:before{content:"";position:absolute;inset:13px;border-radius:50%;border:2px solid #fff8}.coin:after{content:"";position:absolute;width:72px;height:22px;left:38px;top:28px;border-radius:50%;background:#fff9;filter:blur(10px);transform:rotate(-28deg)}.coin-inner{width:108px;height:108px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:4px solid #9d6208;background:linear-gradient(145deg,#ffe979,#e3a719);color:#a36908;font-size:62px;font-weight:900;box-shadow:inset 7px 7px 14px #fff8,inset -9px -9px 13px #74450077}.coin:active{transform:scale(.91)}.side-actions{position:absolute;z-index:5;right:12px;bottom:73px;width:42%}.side-card{padding:12px;margin-top:10px;border:1px solid #1f405d;border-radius:18px;background:linear-gradient(135deg,#071a2b,#04101c);box-shadow:0 10px 25px #0008}.side-title{font-size:16px;font-weight:900}.side-sub{color:#8b9cb3;font-size:11px;margin-top:5px}.gold-btn,.panel-btn{width:100%;margin-top:9px;padding:11px 7px;border:0;border-radius:13px;background:linear-gradient(180deg,#ffdc4b,#f5b717);color:#171106;font-size:13px;font-weight:900;box-shadow:0 5px 15px #0007,inset 0 1px #fff8}.energy-box{position:absolute;z-index:8;left:13px;right:13px;bottom:15px}.energy-top{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:16px}.energy-bar{width:100%;height:14px;overflow:hidden;border:1px solid #38536e;border-radius:20px;background:#20354b}.energy-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#ffc526,#ffe866);box-shadow:0 0 12px #ffc526;transition:.2s}.quick{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.quick-card{min-height:84px;display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #1e3b58;border-radius:18px;background:linear-gradient(135deg,#071827,#04101c);color:#fff;text-align:left}.quick-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:radial-gradient(circle,#1c3a51,#081827);border:1px solid #294962;font-size:24px}.quick-title{font-size:15px;font-weight:900}.quick-sub{margin-top:4px;color:#8b9db5;font-size:10px}.quick-arrow{margin-left:auto;font-size:27px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:9px}.small-card{min-height:90px;padding:9px 6px;border:1px solid #1e3b58;border-radius:17px;background:#071827;color:#fff}.small-icon{width:41px;height:41px;margin:auto;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#102a3e;font-size:21px}.small-title{margin-top:6px;font-size:12px;font-weight:900}.small-sub{margin-top:3px;color:#8093aa;font-size:9px}.top10{margin-top:10px;padding:13px;border:1px solid #1e3b58;border-radius:18px;background:#061522}.top-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.top-title{font-size:16px;font-weight:900}.top-link{color:#b4c1d3;font-size:11px}.rank-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}.rank-scroll::-webkit-scrollbar{display:none}.rank{min-width:185px;padding:10px;border:1px solid #18334c;border-radius:15px;background:#0a1c2c}.rank-top{display:flex;align-items:center;gap:7px}.rank-medal{font-size:23px}.rank-avatar{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid #657b90;background:#172b3e;overflow:hidden}.rank-name{font-size:12px;font-weight:900}.rank-coins{margin-top:7px;color:#ffd23c;font-size:11px;font-weight:bold}.bottom{position:fixed;z-index:100;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:520px;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 5px calc(7px + env(safe-area-inset-bottom));background:#020a14ed;backdrop-filter:blur(15px);border-top:1px solid #203750}.bottom button{border:0;background:none;color:#8b9bb2;font-size:10px;padding:3px}.bottom button.active{color:#ffd32f}.bottom-icon{display:block;margin-bottom:3px;font-size:22px}.msg{position:fixed;z-index:600;left:50%;bottom:95px;transform:translateX(-50%);max-width:90%;padding:10px 16px;border:1px solid #31516e;border-radius:14px;background:#071827ee;color:#fff;font-size:13px;font-weight:bold;text-align:center;pointer-events:none}.float{position:fixed;z-index:700;pointer-events:none;color:#ffd32f;font-size:23px;font-weight:900;animation:floatUp .8s ease-out forwards}@keyframes floatUp{to{opacity:0;transform:translateY(-105px) scale(1.45)}}.panel{display:none;position:fixed;z-index:200;inset:0;overflow:auto;padding:15px 13px 100px;background:radial-gradient(circle at 50% 20%,#0b2942,#020912 65%)}.panel-inner{width:100%;max-width:520px;margin:auto}.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.panel-head h2{margin:0;font-size:23px}.close{padding:10px 13px;border:1px solid #29445f;border-radius:12px;background:#081827;color:#fff}.panel-card{padding:16px;margin-bottom:10px;border:1px solid #1e3b57;border-radius:17px;background:#071827;box-shadow:0 10px 25px #0006}.small{margin-top:6px;color:#899bb0;font-size:12px;line-height:1.5}.input{width:100%;padding:12px;border-radius:12px;border:1px solid #35516a;background:#0a1622;color:#fff;outline:none}.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.stat{padding:13px;border:1px solid #1e3b57;border-radius:15px;background:#061522}.stat-number{font-size:22px;font-weight:900;color:#ffd33b}.stat-label{margin-top:4px;color:#8c9eb3;font-size:10px}.item{padding:12px;margin-top:8px;border:1px solid #203f59;border-radius:14px;background:#091b2b}.item-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.actions{display:flex;gap:6px;margin-top:8px}.actions button{flex:1;padding:9px;border:0;border-radius:10px;font-weight:900}.accept{background:#55e997}.reject{background:#25384a;color:#fff}.notice{padding:12px;border-radius:13px;background:#0c2032;border:1px solid #31516e;margin-bottom:10px}.chat-list{height:300px;overflow:auto;padding:5px}.bubble{max-width:82%;padding:9px 11px;margin:7px 0;border-radius:13px;background:#102a3e}.bubble.me{margin-left:auto;background:#9b6d0b}.bubble-time{font-size:9px;opacity:.65;margin-top:3px}@media(max-width:400px){.app{padding-left:9px;padding-right:9px}.brand-text{font-size:23px}.logo{width:53px;height:53px}.profile-mini{min-width:70px}.profile-mini-id{display:none}.header-btn{width:37px;height:37px}.balance{font-size:42px}.coin{width:165px;height:165px}.coin-inner{width:94px;height:94px;font-size:53px}.side-card{padding:10px}.side-title{font-size:14px}}
+</style>
 </head>
 <body>
-
-<div class="phone-container">
-    <!-- Header -->
-    <div class="header">
-        <div class="logo-area">
-            <div class="logo-icon"><span>E</span></div>
-            <div class="logo-text">
-                <h1>ELCOIN</h1>
-                <p>PLAY • EARN • GROW</p>
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="profile-pill">
-                <div class="avatar">👤</div>
-                <div class="profile-info">
-                    <div class="name">Elvin</div>
-                    <div class="id">ID: #4827</div>
-                </div>
-            </div>
-            <div class="icon-btn notification-dot" onclick="alert('Bildiriş yoxdur')">🔔</div>
-            <div class="icon-btn" onclick="alert('Menyu açıldı')">☰</div>
-        </div>
-    </div>
-
-    <!-- Content -->
-    <div class="content">
-        <!-- Hero Card -->
-        <div class="hero-card">
-            <div class="hero-top-row">
-                <div class="coin-counter">
-                    <div class="label">🪙 ELCOIN</div>
-                    <div class="amount" id="balanceDisplay">1,263</div>
-                    <div class="rate">⬆️ +24 / dəq</div>
-                </div>
-                <div class="slogan-badge">
-                    <span>Bigger<br>Stronger<br>Together</span>
-                </div>
-            </div>
-
-            <!-- Big Clickable Coin -->
-            <div class="main-coin-container" id="coinContainer">
-                <div class="main-coin" id="tapCoin">
-                    <div class="main-coin-inner">
-                        <div class="main-coin-symbol">E</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Energy Bar -->
-            <div class="energy-section">
-                <div class="energy-info">
-                    <span>⚡ Energy</span>
-                    <span id="energyText">478/1000</span>
-                </div>
-                <div class="energy-bar-bg">
-                    <div class="energy-bar-fill" id="energyBar"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Action Cards Grid -->
-        <div class="action-cards-grid">
-            <div class="small-action-card">
-                <div class="card-header-top">🎁 Daily Bonus</div>
-                <button class="action-btn" onclick="claimBonus()">+500 Claim</button>
-            </div>
-            <div class="small-action-card">
-                <div class="card-header-top">📈 Upgrade <span style="font-size:9px; color:#a0aec0; margin-left:auto;">Lvl 11</span></div>
-                <button class="action-btn" onclick="upgradeLevel()">⬆️ Upgrade 1100</button>
-            </div>
-        </div>
-
-        <!-- Menu Navigation Grid -->
-        <div class="menu-grid">
-            <div class="menu-row">
-                <div class="menu-item" onclick="alert('Taksilər açıldı')">
-                    <div class="menu-item-left">
-                        <div class="menu-icon-box">🚗</div>
-                        <div class="menu-item-text">
-                            <div class="title">Taksilər</div>
-                            <div class="desc">Maşınlar al</div>
-                        </div>
-                    </div>
-                    <div class="arrow-icon">➔</div>
-                </div>
-                <div class="menu-item" onclick="alert('Şəhər açıldı')">
-                    <div class="menu-item-left">
-                        <div class="menu-icon-box">🏙️</div>
-                        <div class="menu-item-text">
-                            <div class="title">Şəhər</div>
-                            <div class="desc">Yeni şəhərlər</div>
-                        </div>
-                    </div>
-                    <div class="arrow-icon">➔</div>
-                </div>
-            </div>
-
-            <div class="menu-row">
-                <div class="menu-item" onclick="alert('Dostlar açıldı')">
-                    <div class="menu-item-left">
-                        <div class="menu-icon-box">👥</div>
-                        <div class="menu-item-text">
-                            <div class="title">Dostlar</div>
-                            <div class="desc">Referal link</div>
-                        </div>
-                    </div>
-                    <div class="arrow-icon">➔</div>
-                </div>
-                <div class="menu-item" onclick="alert('Reytinq açıldı')">
-                    <div class="menu-item-left">
-                        <div class="menu-icon-box">🏆</div>
-                        <div class="menu-item-text">
-                            <div class="title">Reytinq</div>
-                            <div class="desc">TOP oyunçular</div>
-                        </div>
-                    </div>
-                    <div class="arrow-icon">➔</div>
-                </div>
-            </div>
-
-            <div class="menu-item menu-item-full" onclick="alert('Tapşırıqlar açıldı')">
-                <div class="menu-item-left">
-                    <div class="menu-icon-box">📋</div>
-                    <div class="menu-item-text">
-                        <div class="title">Tapşırıqlar</div>
-                        <div class="desc">Mükafatlar qazan</div>
-                    </div>
-                </div>
-                <div class="arrow-icon">➔</div>
-            </div>
-        </div>
-
-        <!-- Weekly Top 10 Section -->
-        <div class="top10-section">
-            <div class="top10-header">
-                <div class="top10-title">👑 Həftəlik TOP 10</div>
-                <div class="all-ranking" onclick="alert('Bütün reytinq')">Bütün reytinq →</div>
-            </div>
-            <div class="top10-list">
-                <div class="top10-card">
-                    <div class="rank-badge r1">1</div>
-                    <div class="top10-user-info">
-                        <div class="u-name">Elvin 👑</div>
-                        <div class="u-score">12,450,800</div>
-                    </div>
-                </div>
-                <div class="top10-card">
-                    <div class="rank-badge r2">2</div>
-                    <div class="top10-user-info">
-                        <div class="u-name">Ali</div>
-                        <div class="u-score">9,820,400</div>
-                    </div>
-                </div>
-                <div class="top10-card">
-                    <div class="rank-badge r3">3</div>
-                    <div class="top10-user-info">
-                        <div class="u-name">Murad</div>
-                        <div class="u-score">7,650,200</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation Bar -->
-    <div class="bottom-nav">
-        <div class="nav-item active">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            <span>Əsas</span>
-        </div>
-        <div class="nav-item" onclick="alert('Taksilər')">
-            <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99z"/></svg>
-            <span>Taksilər</span>
-        </div>
-        <div class="nav-item" onclick="alert('Şəhər')">
-            <svg viewBox="0 0 24 24"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2z"/></svg>
-            <span>Şəhər</span>
-        </div>
-        <div class="nav-item" onclick="alert('Dostlar')">
-            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/></svg>
-            <span>Dostlar</span>
-        </div>
-        <div class="nav-item" onclick="alert('Reytinq')">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1c.88 0 1.66.58 1.92 1.41.97.23 1.91.68 2.75 1.33V14c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-2.26c.84-.65 1.78-1.1 2.75-1.33.26-.83 1.04-1.41 1.92-1.41h1c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-            <span>Reytinq</span>
-        </div>
-    </div>
+<div class="app">
+<div class="header"><div class="brand"><div class="logo">E</div><div><div class="brand-text">EL<span>COIN</span></div><div class="tagline">PLAY · EARN · GROW</div></div></div><div class="header-actions"><div class="profile-mini"><div class="profile-mini-icon" id="profileIcon">👤</div><div><div class="profile-mini-name" id="user">Player</div><div class="profile-mini-id">ELCOIN PLAYER</div></div></div><button class="header-btn" onclick="openPanel('notificationsPanel')">🔔<span class="badge" id="notificationBadge">0</span></button><button class="header-btn" onclick="showMessage('☰ Menyu tezliklə')">☰</button></div></div>
+<div class="game-card"><div class="city"><div class="building b1"></div><div class="building b2"></div><div class="building b3"></div><div class="building b4"></div><div class="building b5"></div><div class="building b6"></div><div class="bridge"></div></div><div class="balance-area"><div class="balance-label"><div class="balance-coin">E</div>ELCOIN</div><div class="balance"><span id="balance">0</span> <span class="balance-unit">ELCOIN</span></div><div class="income">▲ +<span id="income">0</span> / gün</div></div><div class="slogan">👑<br>Bigger<br>Stronger<br>Together</div><div class="coin-zone"><div class="coin-glow"></div><div class="coin-platform"></div><div class="coin" id="coin"><div class="coin-inner">E</div></div></div><div class="side-actions"><div class="side-card"><div class="side-title">🎁 Daily Bonus</div><div class="side-sub" id="bonusStatus">Gündəlik bonusunu götür</div><button class="gold-btn" id="bonus">🎁 +500 Claim</button></div><div class="side-card"><div class="side-title">📈 Upgrade</div><div class="side-sub">Level <span id="level">1</span></div><button class="gold-btn" id="upgrade">⬆ Upgrade 100</button></div></div><div class="energy-box"><div class="energy-top">⚡ ENERGY <b><span id="energy">3000</span> /3000</b></div><div class="energy-bar"><div class="energy-fill" id="fill"></div></div><div class="small" style="margin-top:5px">Bərpa: 3000 energy / 1 saat</div></div></div>
+<div class="msg" id="msg"></div>
+<div class="quick"><button class="quick-card" onclick="openPanel('taxiPanel')"><div class="quick-icon">🚕</div><div><div class="quick-title">Taksilər</div><div class="quick-sub">Maşın al və işlət</div></div><div class="quick-arrow">›</div></button><button class="quick-card" onclick="openPanel('tasksPanel')"><div class="quick-icon">📋</div><div><div class="quick-title">Tapşırıqlar</div><div class="quick-sub">Mükafatlar qazan</div></div><div class="quick-arrow">›</div></button></div>
+<div class="three"><button class="small-card" onclick="openPanel('friendsPanel')"><div class="small-icon">👥</div><div class="small-title">Dostlar</div><div class="small-sub">Dost əlavə et və yaz</div></button><button class="small-card" onclick="openPanel('rankingPanel')"><div class="small-icon">🏆</div><div class="small-title">Reytinq</div><div class="small-sub">TOP oyunçular</div></button><button class="small-card" onclick="openPanel('tasksPanel')"><div class="small-icon">📋</div><div class="small-title">Tapşırıqlar</div><div class="small-sub">Mükafatlar qazan</div></button></div>
+<div class="top10"><div class="top-header"><div class="top-title">👑 Həftəlik TOP 10</div><div class="top-link" onclick="openPanel('rankingPanel')">Bütün reytinq →</div></div><div class="rank-scroll" id="weeklyRanking"></div></div>
 </div>
+<div class="bottom"><button class="active" onclick="closePanels()"><span class="bottom-icon">🏠</span>Əsas</button><button onclick="openPanel('taxiPanel')"><span class="bottom-icon">🚕</span>Taksilər</button><button onclick="openPanel('tasksPanel')"><span class="bottom-icon">📋</span>Tapşırıqlar</button><button onclick="openPanel('friendsPanel')"><span class="bottom-icon">👥</span>Dostlar</button><button onclick="openPanel('rankingPanel')"><span class="bottom-icon">🏆</span>Reytinq</button></div>
+<div class="panel" id="taxiPanel"><div class="panel-inner"><div class="panel-head"><h2>🚕 ELCOIN TAXI</h2><button class="close" onclick="closePanels()">✕</button></div><div class="notice">🚕 Taksi al, sonra səfərlərdə istifadə et. Alınmış taksilər bu cihazda və hesab üzrə qorunur.</div><div id="taxiCards"></div><div class="stat-grid"><div class="stat"><div class="stat-number" id="taxiRidesStat">0</div><div class="stat-label">TAXI RIDE</div></div><div class="stat"><div class="stat-number" id="taxiLevelStat">1</div><div class="stat-label">TAXI LEVEL</div></div></div></div></div>
 
+<div class="panel" id="friendsPanel"><div class="panel-inner"><div class="panel-head"><h2>👥 DOSTLAR</h2><button class="close" onclick="closePanels()">✕</button></div><div class="panel-card"><b>🔎 Oyunçu axtar</b><div class="small">Nickname ilə axtar.</div><div style="display:flex;gap:8px;margin-top:12px"><input class="input" id="friendSearch" placeholder="Oyunçu adı..."><button class="panel-btn" style="width:auto;margin-top:0" onclick="searchFriend()">🔎</button></div><div id="friendSearchResult"></div></div><div class="panel-card"><b>📥 Gələn sorğular <span id="requestCount"></span></b><div id="incomingRequests" style="margin-top:10px"><div class="small">Yüklənir...</div></div></div><div class="panel-card"><b>👥 Sənin dostların</b><div id="friendsList" style="margin-top:10px"><div class="small">Yüklənir...</div></div></div><div class="panel-card"><b>🎁 Dostlarını dəvət et</b><div class="small">Invite kodunu paylaş.</div><p id="inviteCode">ELCOIN</p><button class="panel-btn" onclick="copyInvite()">📋 INVITE KODUNU KOPYALA</button></div></div></div>
+<div class="panel" id="chatPanel"><div class="panel-inner"><div class="panel-head"><h2 id="chatTitle">💬 Mesajlaşma</h2><button class="close" onclick="openPanel('friendsPanel')">←</button></div><div class="panel-card"><div class="chat-list" id="chatList"><div class="small">Mesajlar yüklənir...</div></div><div style="display:flex;gap:7px;margin-top:8px"><input class="input" id="messageInput" placeholder="Mesaj yaz..."><button class="panel-btn" style="width:auto;margin-top:0" onclick="sendMessage()">➤</button></div></div></div></div>
+<div class="panel" id="rankingPanel"><div class="panel-inner"><div class="panel-head"><h2>🏆 REYTİNQ</h2><button class="close" onclick="closePanels()">✕</button></div><div class="notice">İctimai hissədə real ad yox, nickname göstərilir. Şəxsi yerin yalnız sənə göstərilir.</div><div id="myRank" class="panel-card">Sənin yerin: hesablanır...</div><div id="rankingList"></div></div></div>
+<div class="panel" id="tasksPanel"><div class="panel-inner"><div class="panel-head"><h2>📋 TAPŞIRIQLAR</h2><button class="close" onclick="closePanels()">✕</button></div><div id="taskCards"></div></div></div>
+<div class="panel" id="notificationsPanel"><div class="panel-inner"><div class="panel-head"><h2>🔔 BİLDİRİŞLƏR</h2><button class="close" onclick="closePanels()">✕</button></div><div id="notificationsList"><div class="small">Yüklənir...</div></div></div></div>
+<div class="panel" id="profilePanel"><div class="panel-inner"><div class="panel-head"><h2>👤 PROFİL</h2><button class="close" onclick="closePanels()">✕</button></div><div class="panel-card"><b>Nickname</b><div class="small">Başqa oyunçular yalnız bunu görəcək.</div><input class="input" id="nicknameInput" maxlength="24" style="margin-top:10px" placeholder="player_1234"><button class="panel-btn" onclick="saveNickname()">💾 NICKNAME SAXLA</button></div></div></div>
 <script>
-    let balance = 1263;
-    let energy = 478;
-    const maxEnergy = 1000;
-    const clickPower = 1;
-
-    const balanceDisplay = document.getElementById('balanceDisplay');
-    const energyText = document.getElementById('energyText');
-    const energyBar = document.getElementById('energyBar');
-    const coinContainer = document.getElementById('coinContainer');
-    const tapCoin = document.getElementById('tapCoin');
-
-    // Həm toxunma (touch), həm də klik dəstəyi
-    function handleCoinClick(e) {
-        e.preventDefault();
-        if (energy >= clickPower) {
-            balance += clickPower;
-            energy -= clickPower;
-            updateUI();
-            
-            // Koordinatları təyin et
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            if(clientX && clientY) {
-                showFloatingNumber(clientX, clientY);
-            }
-        } else {
-            alert('Enerjiniz bitdi!');
-        }
-    }
-
-    tapCoin.addEventListener('click', handleCoinClick);
-    tapCoin.addEventListener('touchstart', handleCoinClick, { passive: false });
-
-    function updateUI() {
-        balanceDisplay.innerText = balance.toLocaleString();
-        energyText.innerText = `${energy}/${maxEnergy}`;
-        const percent = (energy / maxEnergy) * 100;
-        energyBar.style.width = percent + '%';
-    }
-
-    function showFloatingNumber(clientX, clientY) {
-        const rect = coinContainer.getBoundingClientRect();
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-
-        const floatEl = document.createElement('div');
-        floatEl.className = 'floating-number';
-        floatEl.innerText = `+${clickPower}`;
-        floatEl.style.left = `${x}px`;
-        floatEl.style.top = `${y}px`;
-
-        coinContainer.appendChild(floatEl);
-        setTimeout(() => { floatEl.remove(); }, 600);
-    }
-
-    function claimBonus() {
-        balance += 500;
-        updateUI();
-        alert('+500 ELCOIN bonus əlavə olundu!');
-    }
-
-    function upgradeLevel() {
-        if (balance >= 1100) {
-            balance -= 1100;
-            updateUI();
-            alert('Səviyyə yüksəldildi!');
-        } else {
-            alert('Balansda kifayət qədər coin yoxdur.');
-        }
-    }
-
-    setInterval(() => {
-        if (energy < maxEnergy) {
-            energy = Math.min(maxEnergy, energy + 3);
-            updateUI();
-        }
-    }, 1000);
+const tg=window.Telegram?.WebApp; if(tg){tg.ready();tg.expand()}
+const telegramUser=tg?.initDataUnsafe?.user||null;
+const FUNCTION_URL="https://umqlgklqpolmiqoyqkbu.supabase.co/functions/v1/telegram-user";
+const SUPABASE_URL="https://umqlgklqpolmiqoyqkbu.supabase.co";
+const SUPABASE_KEY="sb_publishable_unLN1x7hk9GpbgxuAmTj6Q_GwMAWMVp";
+const maxEnergy=3000;
+const ENERGY_PER_MS=3000/3600000;
+let connected=false,saving=false,energyTimer=null,chatTarget=null,lastEnergyTick=Date.now();
+let game={balance:0,energy:3000,level:1,lastBonus:0,referrals:0,taxiLevel:1,cityLevel:1,totalTaps:0,totalRides:0,ownedTaxis:{economy:false,comfort:false,premium:false},claimedTasks:{}};
+const taxiInfo={
+prius:{price:3000,reward:150,energy:0,level:1,name:'Toyota Prius',icon:'🚕',income:150},
+corolla:{price:6000,reward:300,energy:0,level:2,name:'Toyota Corolla',icon:'🚕',income:300},
+camry:{price:12000,reward:600,energy:0,level:3,name:'Toyota Camry',icon:'🚖',income:600},
+sonata:{price:25000,reward:1250,energy:0,level:4,name:'Hyundai Sonata',icon:'🚘',income:1250},
+passat:{price:50000,reward:2500,energy:0,level:5,name:'Volkswagen Passat',icon:'🚘',income:2500},
+mercedes:{price:100000,reward:5000,energy:0,level:7,name:'Mercedes E-Class',icon:'🚖',income:5000},
+bmw:{price:200000,reward:10000,energy:0,level:9,name:'BMW 5 Series',icon:'🚘',income:10000},
+audi:{price:400000,reward:20000,energy:0,level:12,name:'Audi A6',icon:'🚘',income:20000},
+range:{price:800000,reward:40000,energy:0,level:15,name:'Range Rover',icon:'🚙',income:40000},
+maybach:{price:1500000,reward:75000,energy:0,level:20,name:'Mercedes-Maybach',icon:'🚘',income:75000}
+};
+function key(n){return "elcoin_"+n+"_"+(telegramUser?.id||"guest")}
+function showMessage(t){const m=document.getElementById("msg");m.textContent=t;clearTimeout(window.mt);window.mt=setTimeout(()=>m.textContent="",2200)}
+function headers(extra={}){return Object.assign({apikey:SUPABASE_KEY,"Content-Type":"application/json"},extra)}
+function openPanel(id){document.querySelectorAll('.panel').forEach(p=>p.style.display='none');const p=document.getElementById(id);if(p)p.style.display='block';if(id==='friendsPanel'){loadFriendRequests();loadFriends()}if(id==='rankingPanel'){loadRanking();loadMyRank()}if(id==='notificationsPanel')loadNotifications();if(id==='chatPanel')loadChat();if(id==='tasksPanel')renderTasks();if(id==='taxiPanel')renderTaxiCards();if(id==='profilePanel'){document.getElementById('nicknameInput').value=getNickname()}}
+function closePanels(){document.querySelectorAll('.panel').forEach(p=>p.style.display='none')}
+function updateProfile(){if(!telegramUser)return;document.getElementById('user').textContent=getNickname();if(telegramUser.photo_url)document.getElementById('profileIcon').innerHTML='<img src="'+escapeAttr(telegramUser.photo_url)+'">'}
+function defaultNickname(){return "player_"+String(telegramUser?.id||Math.floor(Math.random()*9000+1000)).slice(-6)}
+function getNickname(){return localStorage.getItem(key('nickname'))||defaultNickname()}
+async function saveNickname(){let n=document.getElementById('nicknameInput').value.trim().replace(/\s+/g,'_');if(!/^[A-Za-z0-9_]{3,24}$/.test(n)){showMessage('❌ Nickname 3-24 simvol olmalıdır.');return}localStorage.setItem(key('nickname'),n);updateProfile();showMessage('✅ Nickname saxlanıldı');closePanels()}
+function saveLocal(){if(!telegramUser)return;localStorage.setItem(key('state'),JSON.stringify(game));localStorage.setItem(key('energyTime'),String(Date.now()))}
+function loadLocal(){if(!telegramUser)return;try{const x=JSON.parse(localStorage.getItem(key('state'))||'null');if(x){game={...game,...x,ownedTaxis:{...game.ownedTaxis,...(x.ownedTaxis||{})},claimedTasks:{...game.claimedTasks,...(x.claimedTasks||{})}}}}catch(e){} }
+function render(){document.getElementById('balance').textContent=Math.floor(game.balance);document.getElementById('energy').textContent=Math.floor(game.energy);document.getElementById('level').textContent=game.level;document.getElementById('taxiRidesStat').textContent=game.totalRides;document.getElementById('taxiLevelStat').textContent=game.taxiLevel;document.getElementById('income').textContent=Math.floor(taxiIncome());document.getElementById('fill').style.width=Math.max(0,Math.min(100,game.energy/maxEnergy*100))+'%';document.getElementById('upgrade').textContent='⬆ Upgrade '+game.level*100;const b=document.getElementById('bonus'),s=document.getElementById('bonusStatus');let claimed=game.lastBonus&&Date.now()-game.lastBonus<86400000;b.disabled=claimed;b.style.opacity=claimed?.55:1;b.textContent=claimed?'✅ Claimed':'🎁 +500 Claim';s.textContent=claimed?'24 saat ərzində yenidən götürə bilməzsən.':'Gündəlik bonusunu götür';renderTaxiCards();renderTasks()}
+function renderTaxiCards(){const box=document.getElementById('taxiCards');if(!box)return;box.innerHTML=Object.entries(taxiInfo).map(([type,t])=>{const owned=!!game.ownedTaxis[type],locked=game.level<t.level;return `<div class="panel-card"><b>${t.icon} ${t.name}</b><div class="small">Qiymət: ${t.price} ELCOIN · Level ${t.level} · Gəlir: +${t.income} ELCOIN / saat · Səfər qazancı: ${t.reward} ELCOIN</div><button class="panel-btn" ${owned||locked?'disabled':''} onclick="buyTaxi('${type}')">${owned?'✅ TAKSİ SƏNİNDİR':locked?'🔒 LEVEL '+t.level+' LAZIMDIR':t.icon+' TAKSİ AL · '+t.price}</button><button class="panel-btn" ${owned?'':'disabled'} onclick="workTaxi('${type}')">${owned?'🚕 İŞLƏT +'+t.reward:'🔒 ƏVVƏL TAKSİ AL'}</button></div>`}).join('')}
+function renderTasks(){const box=document.getElementById('taskCards');if(!box)return;const rows=[['tap100','🪙 100 Tap','Coinə 100 dəfə toxun.',game.totalTaps,100,100],['ride10','🚕 10 Taxi Ride','10 dəfə taksi işlət.',game.totalRides,10,250],['invite1','👥 Invite Friend','1 dost dəvət et.',game.referrals,1,500]];box.innerHTML=rows.map(r=>{let done=game.claimedTasks[r[0]],p=Math.min(100,r[3]/r[4]*100);return `<div class="panel-card"><b>${r[1]}</b><div class="small">${r[2]}</div><div style="margin-top:8px;color:#ffd23c">${Math.min(r[3],r[4])} / ${r[4]}</div><div class="energy-bar" style="margin-top:8px;height:8px"><div class="energy-fill" style="width:${p}%"></div></div><button class="panel-btn" ${done?'disabled':''} onclick="claimTask('${r[0]}')">${done?'✅ Götürülüb':'+'+r[5]+' ELCOIN'}</button></div>`}).join('')}
+async function requestServer(gameData){if(!telegramUser)return null;try{const r=await fetch(FUNCTION_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user:{id:telegramUser.id,username:telegramUser.username||null,first_name:telegramUser.first_name||'Player'},game:gameData||null})});const t=await r.text();try{return JSON.parse(t)}catch(e){return null}}catch(e){return null}}
+function applyServerPlayer(p){if(!p)return false;/* Only accept sane server values; never replace a valid local balance with an accidental zero. */const nums=['balance','energy','level','referrals','taxi_level','city_level','total_taps','total_rides'];for(const k of nums){if(p[k]!==undefined&&p[k]!==null&&!Number.isNaN(Number(p[k])))game[k]=Number(p[k])}game.lastBonus=p.last_bonus?new Date(p.last_bonus).getTime():game.lastBonus;return true}
+async function connectUser(){if(!telegramUser){showMessage('⚠️ Oyunu Telegram daxilində aç.');return}loadLocal();updateProfile();const data=await requestServer(null);if(data?.success&&data.player){/* First successful server load is authoritative only if it has a real existing record. */applyServerPlayer(data.player);connected=true;restoreOfflineEnergy();render();loadWeeklyRanking();loadNotifications();showMessage('✅ Hesab qoşuldu!');}else{connected=true;render();showMessage('⚠️ Server cavab vermədi — lokal məlumat qorundu.')}}
+async function saveGame(){if(!connected||!telegramUser)return;if(saving){saveLocal();return}saving=true;saveLocal();const payload={balance:game.balance,energy:game.energy,level:game.level,last_bonus:game.lastBonus?new Date(game.lastBonus).toISOString():null,referrals:game.referrals,taxi_level:game.taxiLevel,city_level:game.cityLevel,total_taps:game.totalTaps,total_rides:game.totalRides};const d=await requestServer(payload);saving=false;if(d?.success&&d.player){/* Never zero good local progress because of a malformed response. */applyServerPlayer(d.player);saveLocal();render()} }
+function restoreOfflineEnergy(){if(!telegramUser)return;const last=Number(localStorage.getItem(key('energyTime'))||Date.now()),gain=Math.floor((Date.now()-last)/3000);if(gain>0)game.energy=Math.min(maxEnergy,game.energy+gain);localStorage.setItem(key('energyTime'),String(Date.now()));saveLocal()}
+function startEnergy(){clearInterval(energyTimer);lastEnergyTick=Date.now();energyTimer=setInterval(()=>{if(!connected)return;if(game.energy<maxEnergy){game.energy=Math.min(maxEnergy,game.energy+1);render();saveLocal()}},1200)}
+function floatCoin(x,y,v){const e=document.createElement('div');e.className='float';e.textContent='+'+v;e.style.left=x+'px';e.style.top=y+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),800)}
+document.getElementById('coin').onclick=async e=>{if(!connected)return showMessage('⏳ Hesab qoşulur...');if(game.energy<1)return showMessage('⚡ Energy bitib!');const n=game.level;game.balance+=n;game.energy--;game.totalTaps++;floatCoin(e.clientX-10,e.clientY-20,n);render();await saveGame()}
+document.getElementById('bonus').onclick=async()=>{if(!connected)return showMessage('⏳ Hesab qoşulur...');if(game.lastBonus&&Date.now()-game.lastBonus<86400000)return showMessage('🎁 Bonus artıq götürülüb.');game.balance+=500;game.lastBonus=Date.now();render();await saveGame();showMessage('+500 ELCOIN! 🎉')}
+document.getElementById('upgrade').onclick=async()=>{if(!connected)return;const c=game.level*100;if(game.balance<c)return showMessage('🪙 Coin kifayət etmir.');game.balance-=c;game.level++;render();await saveGame();showMessage('📈 Level yüksəldi!')}
+async function buyTaxi(type){const t=taxiInfo[type];if(!connected||game.ownedTaxis[type])return;if(game.level<t.level)return showMessage('🔒 Level '+t.level+' lazımdır.');if(game.balance<t.price)return showMessage('🪙 Coin kifayət etmir.');game.balance-=t.price;game.ownedTaxis[type]=true;game.taxiLevel=Math.max(game.taxiLevel,t.level);saveLocal();render();await saveGame();showMessage('🚕 Taksi alındı!')}
+async function workTaxi(type){const t=taxiInfo[type];if(!connected||!game.ownedTaxis[type])return showMessage('🚕 Əvvəl taksi al.');const k='elcoin_taxi_tick_'+type+'_'+(telegramUser?.id||'guest');const last=Number(localStorage.getItem(k)||Date.now());const now=Date.now();const hours=Math.min(24,(now-last)/3600000);const reward=Math.floor(hours*t.income);if(reward<1)return showMessage('⏳ Gəlir hələ yığılmayıb.');game.balance+=reward;game.totalRides++;localStorage.setItem(k,String(now));render();await saveGame();showMessage('+'+reward+' ELCOIN 🚕')}
+function taxiIncome(){let total=0;for(const [type,t] of Object.entries(taxiInfo)){if(game.ownedTaxis[type]){const k='elcoin_taxi_tick_'+type+'_'+(telegramUser?.id||'guest');const last=Number(localStorage.getItem(k)||Date.now());total+=Math.floor(Math.min(24,(Date.now()-last)/3600000)*t.income)}}return total}
+async function apiGet(path){try{const r=await fetch(SUPABASE_URL+path,{headers:headers()});if(!r.ok)return null;return await r.json()}catch(e){return null}}
+async function searchFriend(){const n=document.getElementById('friendSearch').value.trim(),box=document.getElementById('friendSearchResult');if(!n)return box.innerHTML='⚠️ Oyunçu adı yaz.';box.innerHTML='🔎 Axtarılır...';const data=await apiGet('/rest/v1/players?nickname=ilike.*'+encodeURIComponent(n)+'*&select=telegram_id,nickname&limit=10');const a=Array.isArray(data)?data.filter(x=>String(x.telegram_id)!==String(telegramUser?.id)):[];box.innerHTML=a.length?a.map(p=>`<div class="item"><b>👤 ${escapeHtml(p.nickname||'Player')}</b><button class="panel-btn" onclick="sendFriendRequest('${escapeJs(String(p.telegram_id))}')">➕ DOSTLUQ SORĞUSU</button></div>`).join(''):'<div class="small">❌ Oyunçu tapılmadı.</div>'}
+async function sendFriendRequest(id){if(!telegramUser||String(id)===String(telegramUser.id))return showMessage('❌ Özünə sorğu göndərə bilməzsən.');try{const r=await fetch(SUPABASE_URL+'/rest/v1/friend_requests',{method:'POST',headers:headers({'Prefer':'return=minimal'}),body:JSON.stringify({sender_id:Number(telegramUser.id),receiver_id:Number(id),status:'pending'})});showMessage(r.ok?'✅ Dostluq sorğusu göndərildi!':'❌ Sorğu göndərilmədi.')}catch(e){showMessage('❌ Xəta baş verdi.')}}
+async function loadFriendRequests(){if(!telegramUser)return;const box=document.getElementById('incomingRequests');const rows=await apiGet('/rest/v1/friend_requests?receiver_id=eq.'+telegramUser.id+'&status=eq.pending&select=id,sender_id,created_at');if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="small">📭 Yeni sorğu yoxdur.</div>';document.getElementById('requestCount').textContent='';return}document.getElementById('requestCount').textContent=' ('+rows.length+')';const parts=await Promise.all(rows.map(async r=>{const p=await getPlayer(r.sender_id);return `<div class="item"><b>👤 ${escapeHtml(p?.nickname||'Player')}</b><div class="actions"><button class="accept" onclick="answerRequest(${r.id},${r.sender_id},'accepted')">✅ Qəbul et</button><button class="reject" onclick="answerRequest(${r.id},${r.sender_id},'rejected')">❌ Rədd et</button></div></div>`}));box.innerHTML=parts.join('')}
+async function answerRequest(id,other,status){try{const r=await fetch(SUPABASE_URL+'/rest/v1/friend_requests?id=eq.'+id,{method:'PATCH',headers:headers({'Prefer':'return=minimal'}),body:JSON.stringify({status})});if(!r.ok)return showMessage('❌ Əməliyyat alınmadı.');showMessage(status==='accepted'?'✅ Dost əlavə edildi!':'Sorğu rədd edildi.');loadFriendRequests();loadFriends();}catch(e){showMessage('❌ Xəta baş verdi.')}}
+async function getPlayer(id){const d=await apiGet('/rest/v1/players?telegram_id=eq.'+id+'&select=telegram_id,nickname&limit=1');return d?.[0]||null}
+async function loadFriends(){if(!telegramUser)return;const box=document.getElementById('friendsList');const rows=await apiGet('/rest/v1/friend_requests?or=(sender_id.eq.'+telegramUser.id+',receiver_id.eq.'+telegramUser.id+')&status=eq.accepted&select=sender_id,receiver_id');if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="small">👥 Hələ dostun yoxdur.</div>';return}const ids=rows.map(r=>Number(r.sender_id)===Number(telegramUser.id)?r.receiver_id:r.sender_id);const ps=await Promise.all(ids.map(getPlayer));box.innerHTML=ps.filter(Boolean).map(p=>`<div class="item"><div class="item-head"><b>👤 ${escapeHtml(p.nickname||'Player')}</b><button class="panel-btn" style="width:auto;margin:0" onclick="openChat(${p.telegram_id},'${escapeJs(p.nickname||'Player')}')">💬 Yaz</button></div></div>`).join('')}
+function openChat(id,name){chatTarget={id:Number(id),name};document.getElementById('chatTitle').textContent='💬 '+name;openPanel('chatPanel')}
+async function loadChat(){if(!telegramUser||!chatTarget)return;const box=document.getElementById('chatList'),d=await apiGet('/rest/v1/messages?or=(and(sender_id.eq.'+telegramUser.id+',receiver_id.eq.'+chatTarget.id+'),and(sender_id.eq.'+chatTarget.id+',receiver_id.eq.'+telegramUser.id+'))&select=sender_id,message,created_at&order=created_at.asc&limit=100');if(!Array.isArray(d)||!d.length)return box.innerHTML='<div class="small">Hələ mesaj yoxdur.</div>';box.innerHTML=d.map(m=>`<div class="bubble ${String(m.sender_id)===String(telegramUser.id)?'me':''}">${escapeHtml(m.message)}<div class="bubble-time">${new Date(m.created_at).toLocaleString('az-AZ')}</div></div>`).join('');box.scrollTop=box.scrollHeight}
+async function sendMessage(){const input=document.getElementById('messageInput'),text=input.value.trim();if(!telegramUser||!chatTarget||!text)return;try{const r=await fetch(SUPABASE_URL+'/rest/v1/messages',{method:'POST',headers:headers({'Prefer':'return=minimal'}),body:JSON.stringify({sender_id:Number(telegramUser.id),receiver_id:Number(chatTarget.id),message:text})});if(!r.ok)return showMessage('❌ Mesaj göndərilmədi.');input.value='';await loadChat();showMessage('✅ Göndərildi')}catch(e){showMessage('❌ Xəta baş verdi.')}}
+async function loadNotifications(){if(!telegramUser)return;const list=document.getElementById('notificationsList'),d=await apiGet('/rest/v1/notifications?receiver_id=eq.'+telegramUser.id+'&select=id,type,title,body,read,created_at&order=created_at.desc&limit=30');if(!Array.isArray(d)||!d.length){list.innerHTML='<div class="notice">📢 ELCOIN XƏBƏRİ<br><br>ELCOIN-in təxminən <b>5–6 ay ərzində</b> satışa çıxarılması planlaşdırılır.<br><br>🪙 Coinlərinizi toplamağa davam edin.</div>';return}const u=d.filter(x=>!x.read).length,b=document.getElementById('notificationBadge');b.textContent=u;b.style.display=u?'flex':'none';list.innerHTML=d.map(x=>`<div class="panel-card"><b>${escapeHtml(x.title||'Bildiriş')}</b><div class="small">${escapeHtml(x.body||'')}</div><div class="small">${new Date(x.created_at).toLocaleString('az-AZ')}</div></div>`).join('')}
+function playerName(p){return p.nickname||'Player'}
+async function rankingData(){return await apiGet('/rest/v1/elcoin_ranking?select=*&order=rank.asc')||[]}
+async function loadWeeklyRanking(){const ps=await rankingData(),list=document.getElementById('weeklyRanking');if(!Array.isArray(ps))return;const a=ps.filter(p=>String(p.telegram_id)!==String(telegramUser?.id)).slice(0,10);list.innerHTML=a.map((p,i)=>`<div class="rank"><div class="rank-top"><div class="rank-medal">${i<3?['🥇','🥈','🥉'][i]:'🏅'}</div><div class="rank-avatar">👤</div><div class="rank-name">${escapeHtml(playerName(p))}</div></div><div class="rank-coins">🪙 ${Math.floor(Number(p.balance)||0)}</div></div>`).join('')}
+async function loadRanking(){const ps=await rankingData(),list=document.getElementById('rankingList');if(!Array.isArray(ps))return;const a=ps.filter(p=>String(p.telegram_id)!==String(telegramUser?.id)).slice(0,10);list.innerHTML=a.map((p,i)=>`<div class="rank" style="margin-bottom:8px;min-width:0"><div class="rank-top"><div class="rank-medal">${i<3?['🥇','🥈','🥉'][i]:'🏅'}</div><div class="rank-avatar">👤</div><div class="rank-name">${escapeHtml(playerName(p))}</div></div><div class="rank-coins">🪙 ${Math.floor(Number(p.balance)||0)}</div></div>`).join('')}
+async function loadMyRank(){
+ if(!telegramUser)return;
+ const box=document.getElementById('myRank');
+ box.innerHTML='⏳ Sənin yerin hesablanır...';
+ const id=encodeURIComponent(String(telegramUser.id));
+ const d=await apiGet('/rest/v1/elcoin_ranking?telegram_id=eq.'+id+'&select=*&limit=1');
+ if(Array.isArray(d)&&d[0]){
+  const rank=Number(d[0].rank);
+  box.innerHTML='🏆 Sənin şəxsi yerin: <b>#'+(Number.isFinite(rank)?rank:'?')+'</b><div class="small">Nickname: '+escapeHtml(d[0].nickname||getNickname())+'</div>';
+  return;
+ }
+ const ps=await apiGet('/rest/v1/players?select=telegram_id,balance&order=balance.desc');
+ if(Array.isArray(ps)){
+  const i=ps.findIndex(p=>String(p.telegram_id)===String(telegramUser.id));
+  if(i>=0){box.innerHTML='🏆 Sənin şəxsi yerin: <b>#'+(i+1)+'</b><div class="small">Nickname: '+escapeHtml(getNickname())+'</div>';return}
+ }
+ box.innerHTML='🏆 Sənin yerin tapılmadı.<div class="small">Reytinq məlumatı serverdən gəlmədi.</div>';
+}
+async function claimTask(type){if(game.claimedTasks[type])return showMessage('✅ Bu tapşırıq artıq götürülüb.');const ok=type==='tap100'?game.totalTaps>=100:type==='ride10'?game.totalRides>=10:game.referrals>=1;if(!ok)return showMessage('📋 Tapşırıq hələ tamamlanmayıb.');const reward=type==='tap100'?100:type==='ride10'?250:500;game.balance+=reward;game.claimedTasks[type]=true;saveLocal();render();await saveGame();showMessage('🎉 +'+reward+' ELCOIN')}
+function copyInvite(){if(!telegramUser)return;const code='ELCOIN-'+telegramUser.id;document.getElementById('inviteCode').textContent=code;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>showMessage('📋 Invite kodu kopyalandı!')).catch(()=>showMessage(code));else showMessage(code)}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}function escapeAttr(v){return escapeHtml(v).replace(/`/g,'&#096;')}function escapeJs(v){return String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+window.addEventListener('beforeunload',()=>saveLocal());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&connected){restoreOfflineEnergy();render();loadWeeklyRanking()}});
+(async()=>{loadLocal();updateProfile();render();if(telegramUser){await connectUser();startEnergy()}else{connected=false;showMessage('⚠️ Oyunu Telegram daxilində aç.')}})();
+setInterval(()=>{if(connected){saveLocal();loadWeeklyRanking()}},30000);setInterval(()=>{if(connected)loadNotifications()},30000);
 </script>
-
 </body>
 </html>
