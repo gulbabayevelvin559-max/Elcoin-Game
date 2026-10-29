@@ -179,30 +179,44 @@ function applyServerPlayer(p){
  if(p.taxi_level!=null)game.taxiLevel=Number(p.taxi_level)||1;
  if(p.city_level!=null)game.cityLevel=Number(p.city_level)||1;
 }
-async function connect(){
- loadLocal();
- if(!telegramUser){
-  connected=false;
-  document.getElementById("connectionState").textContent="Telegram daxilində açılmayıb · demo rejimi";
-  render();return;
- }
- document.getElementById("userName").textContent=telegramUser.username||telegramUser.first_name||"Player";
- document.getElementById("userId").textContent="ID "+telegramUser.id;
- const d=await requestServer(null);
- if(d?.success&&d.player){
-  applyServerPlayer(d.player);connected=true;
-  document.getElementById("connectionState").textContent="Telegram hesabı qoşuldu";
- }else{
-  connected=true;
-  document.getElementById("connectionState").textContent="Lokal oyun · server cavabı yoxdur";
- }
- restoreEnergy();render();loadRanking();
-}
-function restoreEnergy(){
- const last=Number(localStorage.getItem(key("energyTime"))||Date.now());
- const add=Math.floor(Math.max(0,Date.now()-last)/1200);
- game.energy=Math.min(maxEnergy,game.energy+add);
- saveLocal();
+async function connect() {
+  loadLocal();
+
+  const status = document.getElementById("connectionStatus");
+
+  if (!telegramUser) {
+    connected = false;
+    status.textContent =
+      "Telegram hesabı tapılmadı. Lokal demo rejimi aktivdir.";
+    restoreEnergy();
+    render();
+    return;
+  }
+
+  document.getElementById("userName").textContent =
+    telegramUser.username || telegramUser.first_name || "Player";
+
+  document.getElementById("userId").textContent =
+    "ID " + telegramUser.id;
+
+  status.textContent = "Serverə qoşulur...";
+
+  const d = await requestServer(null);
+
+  if (d?.success && d.player) {
+    applyServerPlayer(d.player);
+    connected = true;
+    status.textContent = "Serverə qoşuldu. Məlumatlar yükləndi.";
+    saveLocal();
+  } else {
+    connected = false;
+    status.textContent =
+      "Server bağlantısı alınmadı. Lokal məlumatlar saxlanılır.";
+  }
+
+  restoreEnergy();
+  render();
+  loadRanking();
 }
 async function saveGame(){
  saveLocal();
